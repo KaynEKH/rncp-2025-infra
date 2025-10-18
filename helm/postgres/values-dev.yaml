@@ -1,0 +1,13 @@
+postgres:
+  user: fsci
+  password: fsci_pass
+  dbname: traefik2025db
+  port: 5432
+
+storage:
+  size: 10Gi
+
+image:
+  repository: postgres
+  tag: "15"
+  pullPolicy: IfNotPresent
