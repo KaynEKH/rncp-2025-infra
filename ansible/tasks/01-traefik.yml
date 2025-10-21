@@ -1,0 +1,20 @@
+---
+- name: Ajouter le repo Helm Traefik
+  community.kubernetes.helm_repository:
+    name: traefik
+    repo_url: https://traefik.github.io/charts
+
+- name: Installer Traefik
+  community.kubernetes.helm:
+    name: traefik
+    chart_ref: traefik/traefik
+    release_namespace: traefik
+    create_namespace: true
+    values:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 300m
+          memory: 256Mi

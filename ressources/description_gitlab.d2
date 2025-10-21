@@ -1,0 +1,90 @@
+direction: right
+
+Developer: {
+  shape: rectangle
+  label: "👨‍💻 Developer"
+}
+
+GitLab: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev/gitlab.svg
+  label: "GitLab"
+}
+
+Pipeline: {
+  label: "Pipeline CI/CD"
+  style.fill: "#f9f9f9"
+
+  Trigger: {
+    shape: rectangle
+  }
+
+  Build: {
+    shape: rectangle
+    label: "Build\nBackend + Frontend"
+    style.fill: "#4a90e2"
+    style.font-color: white
+  }
+
+  Push: {
+    shape: rectangle
+    style.fill: "#9b59b6"
+    style.font-color: white
+  }
+
+  deploy_dev: {
+    shape: rectangle
+    style.fill: "#3498db"
+    style.font-color: white
+  }
+
+  deploy_staging: {
+    shape: rectangle
+    style.fill: "#e67e22"
+    style.font-color: white
+  }
+
+  deploy_prod: {
+    shape: rectangle
+    style.fill: "#e74c3c"
+    style.font-color: white
+  }
+
+  Trigger -> Build -> Push -> deploy_dev -> deploy_staging -> deploy_prod
+}
+
+Runner: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev/gitlab.svg
+  label: "GitLab Runner\nsur EKS"
+}
+
+InfraRepo: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev/gitlab.svg
+  label: "Infra Repo\nHelm Charts"
+}
+
+DockerHub: {
+  shape: image
+  icon: https://icons.terrastruct.com/dev/docker.svg
+  label: "DockerHub Registry"
+}
+
+# Connexions principales
+Developer -> GitLab: code commit\nand push
+GitLab -> Pipeline.Trigger: .gitlab-ci.yml
+
+# Runner exécute
+Runner -> Pipeline
+
+# DockerHub
+Pipeline.Push -> DockerHub: push images
+DockerHub -> Pipeline.deploy_dev: pull images {style.stroke-dash: 3}
+DockerHub -> Pipeline.deploy_staging: pull images {style.stroke-dash: 3}
+DockerHub -> Pipeline.deploy_prod: pull images {style.stroke-dash: 3}
+
+# Infra Repo
+InfraRepo -> Pipeline.deploy_dev: clone charts {style.stroke-dash: 3}
+InfraRepo -> Pipeline.deploy_staging: clone charts {style.stroke-dash: 3}
+InfraRepo -> Pipeline.deploy_prod: clone charts {style.stroke-dash: 3}

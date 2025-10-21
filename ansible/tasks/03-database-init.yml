@@ -1,0 +1,46 @@
+---
+- name: Créer le namespace pour l'application
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: "{{ app_namespace | default('default') }}"
+
+- name: Vérifier si la DB a déjà été initialisée
+  kubernetes.core.k8s_info:
+    kind: Job
+    name: db-init-one-time
+    namespace: "{{ app_namespace | default('default') }}"
+  register: db_init_check
+
+- name: Lancer le Job d'initialisation de la DB
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ app_namespace | default('default') }}"
+    definition: "{{ lookup('template', 'templates/db-init-job.j2') }}"
+  when: db_init_check.resources | length == 0
+
+- name: Attendre la fin du Job d'initialisation
+  kubernetes.core.k8s_info:
+    kind: Job
+    name: db-init-one-time
+    namespace: "{{ app_namespace | default('default') }}"
+  register: db_init_job
+  until: >
+    db_init_job.resources | length > 0 and
+    (db_init_job.resources[0].status.succeeded is defined and db_init_job.resources[0].status.succeeded == 1)
+  retries: 30
+  delay: 10
+  when: db_init_check.resources | length == 0
+
+- name: Afficher les logs du Job d'initialisation
+  command: kubectl logs job/db-init-one-time -n {{ app_namespace | default('default') }}
+  register: init_logs
+  when: db_init_check.resources | length == 0
+
+- name: Afficher le résultat
+  debug:
+    msg: "{{ init_logs.stdout_lines }}"
+  when: db_init_check.resources | length == 0

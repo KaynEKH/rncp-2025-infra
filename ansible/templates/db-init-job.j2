@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-init-one-time
+  namespace: {{ app_namespace | default('default') }}
+spec:
+  ttlSecondsAfterFinished: 600
+  backoffLimit: 5
+  template:
+    metadata:
+      name: db-init
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: db-migration
+          image: "{{ backend_image_repo }}:{{ backend_image_tag }}"
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              set -e
+              echo "=== Waiting for database to be ready ==="
+              python app/backend_pre_start.py
+              
+              echo "=== Running Alembic migrations ==="
+              alembic upgrade head
+              
+              echo "=== Creating initial superuser ==="
+              python app/initial_data.py
+              
+              echo "=== Database initialization completed successfully! ==="
+          env:
+            - name: POSTGRES_SERVER
+              value: "{{ rds_endpoint }}"
+            - name: POSTGRES_PORT
+              value: "{{ rds_port | string }}"
+            - name: POSTGRES_DB
+              value: "{{ db_name }}"
+            - name: POSTGRES_USER
+              value: "{{ db_username }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ db_password }}"
+            - name: FIRST_SUPERUSER
+              value: "{{ first_superuser_email }}"
+            - name: FIRST_SUPERUSER_PASSWORD
+              value: "{{ first_superuser_password }}"

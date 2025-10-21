@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "traefik2025.name" . }}-backend-ingress
+  annotations:
+    traefik.enable: "true"
+{{/*    traefik.http.routers.{{ .Values.projectname | lower }}-https.rule: Host(`api.{{ .Values.domain }}`)*/}}
+{{/*    traefik.http.routers.{{ .Values.projectname | lower }}-https.entrypoints: https*/}}
+{{/*    traefik.http.routers.{{ .Values.projectname | lower }}-https.tls: "true"*/}}
+{{/*    traefik.http.routers.{{ .Values.projectname | lower }}-https.tls.certresolver: le*/}}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+        - path: {{ .Values.ingress.path }}
+          pathType: {{ .Values.ingress.pathType }}
+          backend:
+            service:
+              name: {{ include "traefik2025.name" . }}-backend-service
+              port:
+                number: {{ .Values.service.port }}

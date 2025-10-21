@@ -1,0 +1,46 @@
+- name: Nettoyer tout le monitoring
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Désinstaller Loki
+      community.kubernetes.helm:
+        name: loki
+        release_namespace: monitoring
+        state: absent
+      ignore_errors: yes
+
+    - name: Désinstaller Promtail
+      community.kubernetes.helm:
+        name: promtail
+        release_namespace: monitoring
+        state: absent
+      ignore_errors: yes
+
+    - name: Désinstaller kube-prometheus-stack
+      community.kubernetes.helm:
+        name: kube-prometheus-stack
+        release_namespace: monitoring
+        state: absent
+      ignore_errors: yes
+
+    - name: Supprimer tous les PVC du monitoring
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: PersistentVolumeClaim
+        namespace: monitoring
+        label_selectors:
+          - "app in (loki, prometheus, grafana, alertmanager)"
+      ignore_errors: yes
+
+    - name: Attendre 30 secondes
+      ansible.builtin.pause:
+        seconds: 30
+
+    - name: Supprimer le namespace monitoring (optionnel)
+      kubernetes.core.k8s:
+        state: absent
+        api_version: v1
+        kind: Namespace
+        name: monitoring
+      ignore_errors: yes

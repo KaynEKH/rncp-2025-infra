@@ -1,0 +1,45 @@
+---
+- name: Récupérer RDS endpoint
+  shell: terraform output -raw rds_endpoint | cut -d':' -f1
+  args:
+    chdir: ../terraform
+  register: tf_rds_endpoint
+  changed_when: false
+
+- name: Récupérer DB name
+  shell: terraform output -raw db_name
+  args:
+    chdir: ../terraform
+  register: tf_db_name
+  changed_when: false
+
+- name: Récupérer DB username
+  shell: terraform output -raw db_username
+  args:
+    chdir: ../terraform
+  register: tf_db_username
+  changed_when: false
+
+- name: Récupérer DB password
+  shell: terraform output -raw db_password
+  args:
+    chdir: ../terraform
+  register: tf_db_password
+  changed_when: false
+  no_log: true  # Ne pas afficher le mot de passe dans les logs
+
+- name: Définir les variables RDS
+  set_fact:
+    rds_endpoint: "{{ tf_rds_endpoint.stdout }}"
+    db_name: "{{ tf_db_name.stdout }}"
+    db_username: "{{ tf_db_username.stdout }}"
+    db_password: "{{ tf_db_password.stdout }}"
+    rds_port: "5432"
+
+- name: Afficher les valeurs récupérées (sans le password)
+  debug:
+    msg:
+      - "RDS Endpoint: {{ rds_endpoint }}"
+      - "DB Name: {{ db_name }}"
+      - "DB Username: {{ db_username }}"
+      - "DB Port: {{ rds_port }}"

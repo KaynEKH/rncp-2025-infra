@@ -1,0 +1,4 @@
+app_namespace: "production"
+backend_image_repo: "fsci2025/traefik2025"
+backend_image_tag: "latest"
+first_superuser_email: "SuperCrapou@datascientest.com"

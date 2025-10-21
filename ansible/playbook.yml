@@ -1,0 +1,30 @@
+- name: Déployer Traefik, GitLab Runner et Monitoring sur EKS
+  hosts: localhost
+  connection: local
+  vars_files:
+    - vars.yaml
+    - secrets.yaml
+  tasks:
+    - name: Récupérer les outputs Terraform
+      include_tasks: tasks/00-terraform-outputs.yml
+      tags: [ terraform, always ]
+
+    - name: Installer Traefik
+      include_tasks: tasks/01-traefik.yml
+      tags: [ traefik, ingress ]
+
+    - name: Installer GitLab Runner
+      include_tasks: tasks/02-gitlab-runner.yml
+      tags: [ gitlab, ci ]
+
+    - name: Initialiser la base de données
+      include_tasks: tasks/03-database-init.yml
+      tags: [ database, init ]
+
+    - name: Installer le monitoring (Prometheus + Grafana)
+      include_tasks: tasks/04-monitoring.yml
+      tags: [ monitoring, prometheus, grafana ]
+
+    - name: Installer le logging (Loki + Promtail)
+      include_tasks: tasks/05-logging.yml
+      tags: [ logging, loki ]

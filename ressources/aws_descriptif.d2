@@ -1,0 +1,311 @@
+direction: down
+
+Internet: {
+  shape: cloud
+  label: "Internet"
+  style.font-size: 28
+  style.fill: "#e3f2fd"
+  style.stroke: "#1976d2"
+  style.stroke-width: 2
+  width: 250
+  height: 150
+}
+
+TerraformState: {
+  shape: image
+  icon: https://i.d2studio.ai/i48lji/Aws-S3--Streamline-Svg-Logos.png
+  label: "S3 Bucket\nTerraform State"
+  style.font-size: 20
+}
+
+External: {
+  label: "Services Externes"
+  style.fill: "#fff3e0"
+  style.stroke: "#e65100"
+  style.stroke-width: 2
+
+  GitLab: {
+    shape: image
+    icon: https://icons.terrastruct.com/dev/gitlab.svg
+    label: "GitLab CI/CD"
+    style.font-size: 16
+  }
+
+  DockerHub: {
+    shape: image
+    icon: https://i.d2studio.ai/i48lji/Docker PNG.png
+    label: "DockerHub\nRegistry"
+    style.font-size: 16
+  }
+}
+
+VPC: {
+  label: "VPC 10.0.0.0/16\nRégion eu-west-3"
+  style.fill: "#f0f4c3"
+  style.stroke: "#827717"
+  style.stroke-width: 4
+  style.font-size: 20
+
+  PublicZone: {
+    label: "Zone Publique - Multi-AZ (eu-west-3a, eu-west-3b)"
+    style.fill: "#c8e6c9"
+    style.stroke: "#2e7d32"
+    style.stroke-width: 2
+
+    IGW: {
+      shape: rectangle
+      label: "Internet\nGateway"
+      style.fill: "#4caf50"
+      style.font-color: white
+      style.font-size: 20
+      style.bold: true
+    }
+
+    ELB: {
+      shape: rectangle
+      label: "Elastic\nLoad Balancer"
+      style.fill: "#66bb6a"
+      style.font-color: white
+      style.font-size: 20
+      style.bold: true
+    }
+
+    NAT: {
+      shape: rectangle
+      label: "NAT Gateway"
+      style.fill: "#81c784"
+      style.font-color: white
+      style.font-size: 20
+      style.bold: true
+    }
+  }
+
+  PrivateZone: {
+    label: "Zone Privée - Multi-AZ (eu-west-3a, eu-west-3b)\n10.0.2.0/24, 10.0.3.0/24"
+    style.fill: "#bbdefb"
+    style.stroke: "#01579b"
+    style.stroke-width: 2
+
+    EKS: {
+      label: "EKS Cluster - datascientest\nKubernetes 1.33"
+      style.fill: "#e1f5fe"
+      style.stroke: "#0277bd"
+      style.stroke-width: 3
+      style.font-size: 16
+
+      NodeGroup: {
+        label: "Node Group (t4g.large ARM)\nSubnets Privés"
+        style.fill: "#b3e5fc"
+        style.stroke: "#0288d1"
+        style.stroke-width: 2
+
+        app: {
+          style.fill: "#ffffff"
+          style.stroke-width: 0
+          label: ""
+          Traefik: {
+            shape: image
+            icon: https://i.d2studio.ai/i48lji/Traefik.png
+            label: "Traefik\nIngress Controller"
+            style.fill: "#1976d2"
+            style.font-size: 20
+            label.near: outside-bottom-center
+            height: 100
+          }
+
+          Backend: {
+            shape: image
+            icon: https://i.d2studio.ai/i48lji/fastapi.png
+            label: "Backend\nFastAPI"
+            style.fill: "#4a90e2"
+            style.font-size: 20
+            height: 100
+          }
+
+          Frontend: {
+            shape: image
+            icon: https://i.d2studio.ai/i48lji/react.png
+            label: "Frontend\nReact"
+            style.fill: "#42a5f5"
+            style.font-size: 20
+            height: 100
+            label.near: outside-bottom-center
+          }
+        }
+
+        Monitoring: {
+          label: "Monitoring Stack\n(Prometheus, Grafana, Loki)"
+          style.fill: "#ffffff"
+          style.font-color: black
+          style.font-size: 20
+          style.stroke-width: 0
+          prometheus: {
+            label: ""
+            shape: image
+            icon: https://i.d2studio.ai/i48lji/Prometheus.png
+            height: 75
+          }
+          grafana: {
+            label: ""
+            shape: image
+            icon: https://i.d2studio.ai/i48lji/grafana.png
+            height: 75
+          }
+          loki: {
+            label: ""
+            shape: image
+            icon: https://i.d2studio.ai/i48lji/loki.png
+            height: 75
+          }
+        }
+
+        Runner: {
+          shape: cylinder
+          label: "GitLab Runner"
+          style.fill: "#fc6d26"
+          style.font-color: white
+          style.font-size: 20
+        }
+      }
+
+      Storage: {
+        shape: image
+        icon: https://i.d2studio.ai/i48lji/csi.png
+        label: "EBS CSI Driver\n+ Persistent Volumes"
+        style.fill: "#fff9c4"
+        style.stroke: "#f57f17"
+        style.stroke-width: 2
+        style.font-size: 12
+      }
+    }
+
+    RDS: {
+      shape: cylinder
+      label: "RDS PostgreSQL 15\nMulti-AZ\ndb.t3.micro"
+      style.fill: "#82ded3"
+      style.font-color: white
+      style.font-size: 20
+      style.stroke: "#004d40"
+      style.stroke-width: 2
+      awsrds: {
+        shape: image
+        label: ""
+        icon: https://i.d2studio.ai/i48lji/rds.png
+        height: 150
+        style.fill: "#82ded3"
+        style.stroke-width: 0
+      }
+      postgres: {
+        shape: image
+        label: ""
+        icon: https://i.d2studio.ai/i48lji/postgresql.png
+        height: 150
+        style.fill: "#82ded3"
+        style.stroke-width: 0
+      }
+      label.near: top-center
+    }
+    label.near: outside-top-center
+  }
+
+  Security: {
+    label: "Security & IAM"
+    style.fill: "#ffecb3"
+    style.stroke: "#f57f00"
+    style.stroke-width: 2
+
+    SGEKS: {
+      shape: image
+      icon: https://i.d2studio.ai/i48lji/security group.png
+      label: "Security Group EKS\nSSH: 22"
+      style.font-size: 12
+    }
+
+    SGRDS: {
+      shape: image
+      icon: https://i.d2studio.ai/i48lji/security group.png
+      label: "Security Group RDS\nPostgreSQL: 5432\n(VPC only)"
+      style.fill: "#ffb300"
+      style.font-size: 12
+    }
+
+    IAM: {
+      shape: image
+      icon: https://i.d2studio.ai/i48lji/Aws-Iam--Streamline-Svg-Logos.png
+      label: "IAM Roles & Policies\n(EKS, Nodes, CSI, GitLab CI)"
+      style.fill: "#ff9800"
+      style.font-size: 12
+    }
+  }
+}
+
+Internet -> VPC.PublicZone.IGW: "HTTPS" {
+  style.stroke: "#1976d2"
+  style.stroke-width: 3
+}
+
+VPC.PublicZone.IGW -> VPC.PublicZone.ELB: "" {
+  style.stroke: "#1976d2"
+  style.stroke-width: 3
+}
+
+VPC.PublicZone.ELB -> VPC.PrivateZone.EKS.NodeGroup.app.Traefik: "route traffic" {
+  style.stroke: "#1976d2"
+  style.stroke-width: 3
+}
+
+# Routage Traefik
+VPC.PrivateZone.EKS.NodeGroup.app.Traefik -> VPC.PrivateZone.EKS.NodeGroup.app.Backend: "route API" {
+  style.stroke: "#4a90e2"
+  style.stroke-width: 2
+}
+
+VPC.PrivateZone.EKS.NodeGroup.app.Traefik -> VPC.PrivateZone.EKS.NodeGroup.app.Frontend: "route web" {
+  style.stroke: "#42a5f5"
+  style.stroke-width: 2
+}
+
+# Backend vers RDS
+VPC.PrivateZone.EKS.NodeGroup.app.Backend -> VPC.PrivateZone.RDS: "SQL queries\nport 5432" {
+  style.stroke: "#00796b"
+  style.stroke-dash: 3
+  style.stroke-width: 2
+  style.font-size: 20
+}
+
+# NAT Gateway pour sortie internet
+VPC.PublicZone.NAT -> VPC.PrivateZone.EKS: "outbound internet" {
+  style.stroke: "#81c784"
+  style.stroke-dash: 3
+}
+
+# CI/CD
+External.GitLab -> VPC.PrivateZone.EKS.NodeGroup.Runner: "trigger pipeline" {
+  style.stroke: "#fc6d26"
+  style.stroke-dash: 3
+  style.stroke-width: 2
+}
+
+VPC.PrivateZone.EKS.NodeGroup.Runner -> External.DockerHub: "pull/push images" {
+  style.stroke: "#2496ed"
+  style.stroke-dash: 3
+  style.stroke-width: 2
+}
+
+# Monitoring
+VPC.PrivateZone.EKS.NodeGroup.Monitoring -> VPC.PrivateZone.EKS.NodeGroup: "collecte métriques\net logs" {
+  style.stroke: "#ff6f00"
+  style.stroke-dash: 3
+}
+
+# Storage EBS
+VPC.PrivateZone.EKS.Storage -> VPC.PrivateZone.EKS.NodeGroup: "volumes persistants" {
+  style.stroke: "#f57f17"
+  style.stroke-dash: 3
+}
+
+# Terraform State
+TerraformState -> VPC: "gère l'infrastructure" {
+  style.stroke: "#e57373"
+  style.stroke-dash: 3
+}
