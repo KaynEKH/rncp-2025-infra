@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: env-config
-data:
-    NODE_ENV: {{ .Values.env.nodeEnv | quote}}
-    VITE_API_URL: {{ .Values.env.viteApiUrl | quote}}
