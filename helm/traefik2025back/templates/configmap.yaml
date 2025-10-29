@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-backend
+data:
+  PROJECT_NAME: {{ .Values.app.projectName | quote }}
+  ACCESS_TOKEN_EXPIRE_MINUTES: {{ .Values.token.accessTokenExpireMinutes | quote }}
+  POSTGRES_SERVER: {{ .Values.database.postgresServer | quote }}
+  POSTGRES_DBNAME: {{ .Values.database.postgresDb | quote }}
+  POSTGRES_USER: {{ .Values.database.postgresUser | quote }}
+  FRONTEND_HOST: {{ .Values.app.frontendHost | quote }}
+  ENVIRONMENT: {{ .Values.app.environment | quote }}
+  BACKEND_CORS_ORIGINS: "[*]"
+  SMTP_HOST: {{ .Values.mailing.smtpHost | quote }}
+  SMTP_USER: {{ .Values.mailing.smtpUser | quote }}
+  SMTP_TLS: {{ .Values.mailing.smtpTls | quote }}
+  SMTP_SSL: {{ .Values.mailing.smtpTls | quote }}
+  SMTP_PORT: {{ .Values.mailing.smtpPort | quote }}
+  EMAILS_FROM_EMAIL: {{ .Values.mailing.emailsFromEmail | quote }}
+  EMAILS_FROM_NAME: {{ .Values.mailing.emailsFromName | quote }}
+  POSTGRES_PORT: "5432"
+  SENTRY_DSN: {{ .Values.app.sentryDsn | quote }}
+  FIRST_SUPERUSER: {{ .Values.app.firstSuperuser | quote }}

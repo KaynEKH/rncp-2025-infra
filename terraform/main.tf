@@ -38,12 +38,18 @@ module "eks" {
 
 }
 
+resource "random_password" "db_password" {
+  length  = 16
+  special = true
+  override_special = "!#$%&*+-=?^_{|}~"
+}
+
 module "rds" {
   source               = "./modules/rds"
   db_identifier        = "postgres-db"
   db_name              = var.db_name
   db_username          = var.db_username
-  db_password          = var.db_password
+  db_password          = random_password.db_password.result
   db_engine_version    = "15"
   db_instance_class    = var.db_instance_class
   db_allocated_storage = 20

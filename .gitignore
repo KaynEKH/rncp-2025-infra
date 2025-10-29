@@ -4,4 +4,6 @@ terraform.tfstate.backup
 .terraform
 /.idea/
 terraform.tfvars
-
+ansible/.vault_pass
+.venv
+ansible/.venv

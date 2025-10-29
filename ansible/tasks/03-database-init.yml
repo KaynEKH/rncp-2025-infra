@@ -1,46 +1,21 @@
 ---
-- name: Créer le namespace pour l'application
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: "{{ app_namespace | default('default') }}"
+- name: Générer le dump SQL
+  template:
+    src: ../templates/dump_traefik2025.sql.j2
+    dest: /tmp/dump.sql
+    mode: '0600'
 
-- name: Vérifier si la DB a déjà été initialisée
-  kubernetes.core.k8s_info:
-    kind: Job
-    name: db-init-one-time
-    namespace: "{{ app_namespace | default('default') }}"
-  register: db_init_check
+- name: Restaurer la base de données depuis le cluster
+  shell: |
+    kubectl delete pod psql-restore --ignore-not-found
+    kubectl run psql-restore --image=postgres:16 --restart=Never --env="PGPASSWORD={{ db_password }}" -- sleep 3600
+    kubectl cp /tmp/dump.sql psql-restore:/tmp/dump.sql
+    kubectl exec psql-restore -- psql -h "{{ rds_endpoint }}" -U "{{ db_username }}" -d postgres -f /tmp/dump.sql
+    kubectl delete pod psql-restore
+  args:
+    executable: /bin/bash
 
-- name: Lancer le Job d'initialisation de la DB
-  kubernetes.core.k8s:
-    state: present
-    namespace: "{{ app_namespace | default('default') }}"
-    definition: "{{ lookup('template', 'templates/db-init-job.j2') }}"
-  when: db_init_check.resources | length == 0
-
-- name: Attendre la fin du Job d'initialisation
-  kubernetes.core.k8s_info:
-    kind: Job
-    name: db-init-one-time
-    namespace: "{{ app_namespace | default('default') }}"
-  register: db_init_job
-  until: >
-    db_init_job.resources | length > 0 and
-    (db_init_job.resources[0].status.succeeded is defined and db_init_job.resources[0].status.succeeded == 1)
-  retries: 30
-  delay: 10
-  when: db_init_check.resources | length == 0
-
-- name: Afficher les logs du Job d'initialisation
-  command: kubectl logs job/db-init-one-time -n {{ app_namespace | default('default') }}
-  register: init_logs
-  when: db_init_check.resources | length == 0
-
-- name: Afficher le résultat
-  debug:
-    msg: "{{ init_logs.stdout_lines }}"
-  when: db_init_check.resources | length == 0
+- name: Nettoyer
+  file:
+    path: /tmp/dump.sql
+    state: absent

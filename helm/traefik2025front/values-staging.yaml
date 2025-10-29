@@ -1,25 +1,19 @@
 replicaCount: 1
 
-projectname: Traefik2025API
+app:
+  nodeEnv: staging
+  viteApiUrl: http://staging.api.fsci2025.ip-ddns.com
 
 image:
   repository: fsci2025/traefik2025-frontend
   tag: latest
-  pullPolicy: IfNotPresent
-
-env:
-  nodeEnv: staging
-  viteApiUrl: http://api-staging.fsci2025.ip-ddns.com
 
 service:
-  type: ClusterIP
-  protocol: TCP
-  port: 80
-  containerPort: 80
+  frontendPort: 80
+
+container:
+  frontendPort: 80
 
 ingress:
-  enabled: true
   className: traefik
   host: staging.fsci2025.ip-ddns.com
-  path: /
-  pathType: Prefix

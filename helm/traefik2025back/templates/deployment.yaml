@@ -14,21 +14,42 @@ spec:
       labels:
         app: {{ include "traefik2025.name" . }}-backend
     spec:
+#      initContainers:
+#        - name: db-migration
+#          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+#          imagePullPolicy: {{ .Values.image.pullPolicy }}
+#          command: ["/bin/bash", "-c"]
+#          args:
+#            - |
+#              set -e
+#              echo "+++ Let the DB start +++"
+#              python app/backend_pre_start.py
+#
+#              echo "+++ Run migrations +++"
+#              alembic upgrade head
+#
+#              echo "+++ Create initial data in DB +++"
+#              python app/initial_data.py
+#          envFrom:
+#            - configMapRef:
+#                name: config-backend
+#            - secretRef:
+#                name: secrets-backend
       containers:
         - name: {{ include "traefik2025.name" . }}-backend
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: {{ .Values.service.containerPort }}
+            - containerPort: {{ .Values.container.backendPort }}
           envFrom:
             - configMapRef:
-                name: db-config
+                name: config-backend
             - secretRef:
-                name: db-secret
+                name: secrets-backend
           livenessProbe:
             httpGet:
               path: /api/v1/utils/health-check/
-              port: {{ .Values.service.containerPort }}
+              port: {{ .Values.container.backendPort }}
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
@@ -36,6 +57,6 @@ spec:
           readinessProbe:
             httpGet:
               path: /api/v1/utils/health-check/
-              port: {{ .Values.service.containerPort }}
+              port: {{ .Values.container.backendPort }}
             initialDelaySeconds: 10
             periodSeconds: 10

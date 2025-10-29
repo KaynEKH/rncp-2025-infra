@@ -17,7 +17,7 @@
       metadata:
         name: gitlab-runner-sa
 
-- name: Ajouter ClusterRole Admin au Service Account Gitlab
+- name: Créer ClusterRoleBinding avec permissions limitées (au lieu de cluster-admin)
   kubernetes.core.k8s:
     state: present
     definition:
@@ -28,7 +28,7 @@
       roleRef:
         apiGroup: rbac.authorization.k8s.io
         kind: ClusterRole
-        name: cluster-admin
+        name: edit  # Utilise le rôle 'edit' au lieu de 'cluster-admin'
       subjects:
         - kind: ServiceAccount
           name: gitlab-runner-sa
@@ -63,11 +63,7 @@
         config: |
           [[runners]]
             [runners.kubernetes]
-              helper_image = "gitlab/gitlab-runner-helper:arm64-latest"
-              privileged = true
+              helper_image = "registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper:arm64-v18.5.0"
+              privileged = false
               cpu_request = "100m"
               memory_request = "128Mi"
-            [[runners.kubernetes.volumes.empty_dir]]
-              name = "docker-certs"
-              mount_path = "/certs/client"
-              medium = "Memory"

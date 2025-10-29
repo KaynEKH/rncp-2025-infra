@@ -10,10 +10,10 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: {{ .Values.ingress.path }}
-            pathType: {{ .Values.ingress.pathType }}
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: {{ include "traefik2025.name" . }}-frontend-service
                 port:
-                  number: {{ .Values.service.port }}
+                  number: {{ .Values.service.frontendPort }}

@@ -1,47 +1,43 @@
 replicaCount: 3
 
-projectname: Traefik2025API
+app:
+  environment: dev
+  projectName: "[DEV] RNCP Traefik 2025"
+  frontendHost: dev.fsci2025.ip-ddns.com
+  firstSuperuser: "SuperCrapou@datascientest.com"
+  firstSuperuserPassword: ""
+  sentryDsn: ""
 
-domain: fsci2025.ip-ddns.com
-frontend_host: dev.fsci2025.ip-ddns.com
-environment: dev
-cors_origins: "*"
-secret_key: supersecret
-sentry_dsn: ""
+token:
+  accessTokenSecretKey: supersecret
+  accessTokenExpireMinutes: 10080
 
 image :
   repository: fsci2025/traefik2025
   tag: latest
-  pullPolicy: IfNotPresent
 
 service:
-  type: ClusterIP
-  protocol: TCP
-  port: 8000
-  containerPort: 8000
+  backendPort: 8000
 
-env:
-  corsorigins: "[\"http://dev.fsci2025.ip-ddns.com\"]"
-  firstsuperuser: "SuperCrapou@datascientest.com"
+container:
+  backendPort: 8000
 
 ingress:
-  enabled: true
   className: traefik
   host: api-dev.fsci2025.ip-ddns.com
-  path: /
-  pathType: Prefix
 
 database:
-  host: postgres-db.c7de9rz7w1ns.eu-west-3.rds.amazonaws.com
-  port: 5432
-  name: traefik2025db
-  user: fsci
-  password: ""
-  superuserid: cm5jcC5mYXN0YXBpLnRyYWVmaWtAZ21haWwuY29tCg==
-  superuserpwd: ""
+  postgresServer: postgres-db.c7de9rz7w1ns.eu-west-3.rds.amazonaws.com
+  postgresDb: traefik2025db
+  postgresUser: fsci
+  postgresPassword: ""
 
-smtp:
-  host: smtp.local
-  user: smtpuser
-  password: smtppwd
-  fromemail: noreply@example.com
+mailing:
+  smtpHost: smtp.local
+  smtpUser: smtpuser
+  smtpPassword: smtppwd
+  smtpTls: false
+  smtpSsl: false
+  smtpPort: 465
+  emailsFromEmail: noreply@example.com
+  emailsFromName: noreply

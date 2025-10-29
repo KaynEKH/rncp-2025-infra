@@ -1,0 +1,257 @@
+--
+-- PostgreSQL database cluster dump
+--
+
+SET default_transaction_read_only = off;
+
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+
+--
+-- Roles
+--
+
+CREATE ROLE fsci2025;
+ALTER ROLE fsci2025 WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION BYPASSRLS PASSWORD '{{ db_password }}';
+
+
+
+
+
+
+--
+-- Databases
+--
+
+--
+-- Database "template1" dump
+--
+
+\connect template1
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
+-- Dumped by pg_dump version 12.22 (Debian 12.22-1.pgdg120+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- PostgreSQL database dump complete
+--
+
+--
+-- Database "postgres" dump
+--
+
+\connect postgres
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
+-- Dumped by pg_dump version 12.22 (Debian 12.22-1.pgdg120+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- PostgreSQL database dump complete
+--
+
+--
+-- Database "traefik2025" dump
+--
+
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
+-- Dumped by pg_dump version 12.22 (Debian 12.22-1.pgdg120+1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: traefik2025; Type: DATABASE; Schema: -; Owner: fsci2025
+--
+
+CREATE DATABASE traefik2025 WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';
+
+
+ALTER DATABASE traefik2025 OWNER TO fsci2025;
+
+\connect traefik2025
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UUIDs)';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: fsci2025
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO fsci2025;
+
+--
+-- Name: item; Type: TABLE; Schema: public; Owner: fsci2025
+--
+
+CREATE TABLE public.item (
+    description character varying(255),
+    title character varying(255) NOT NULL,
+    id uuid NOT NULL,
+    owner_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.item OWNER TO fsci2025;
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: fsci2025
+--
+
+CREATE TABLE public."user" (
+    email character varying(255) NOT NULL,
+    is_active boolean NOT NULL,
+    is_superuser boolean NOT NULL,
+    full_name character varying(255),
+    hashed_password character varying NOT NULL,
+    id uuid NOT NULL
+);
+
+
+ALTER TABLE public."user" OWNER TO fsci2025;
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: fsci2025
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+1a31ce608336
+\.
+
+
+--
+-- Data for Name: item; Type: TABLE DATA; Schema: public; Owner: fsci2025
+--
+
+COPY public.item (description, title, id, owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: fsci2025
+--
+
+COPY public."user" (email, is_active, is_superuser, full_name, hashed_password, id) FROM stdin;
+rncp.fastapi.traefik@gmail.com	t	t	\N	$2b$12$zdDkbJ76nvjs.p.vMl6KGe9G/8EPa1cOuI5GvSb4Hm/FnVJWMp2iK	a77e0284-b674-4d10-a4c8-5c265fc31f8e
+\.
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: fsci2025
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: item item_pkey; Type: CONSTRAINT; Schema: public; Owner: fsci2025
+--
+
+ALTER TABLE ONLY public.item
+    ADD CONSTRAINT item_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: fsci2025
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ix_user_email; Type: INDEX; Schema: public; Owner: fsci2025
+--
+
+CREATE UNIQUE INDEX ix_user_email ON public."user" USING btree (email);
+
+
+--
+-- Name: item item_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fsci2025
+--
+
+ALTER TABLE ONLY public.item
+    ADD CONSTRAINT item_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public."user"(id) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+--
+-- PostgreSQL database cluster dump complete
+--
+

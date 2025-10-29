@@ -5,10 +5,10 @@ metadata:
   labels:
     app: {{ include "traefik2025.name" . }}-backend
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   selector:
     app: {{ include "traefik2025.name" . }}-backend
   ports:
-    - protocol: {{ .Values.service.protocol }}
-      port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.containerPort }}
+    - protocol: TCP
+      port: {{ .Values.service.backendPort }}
+      targetPort: {{ .Values.container.backendPort }}

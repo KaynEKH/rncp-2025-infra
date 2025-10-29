@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-frontend
+data:
+  NODE_ENV: {{ .Values.app.nodeEnv | quote}}
+  VITE_API_URL: {{ .Values.app.viteApiUrl | quote}}
